@@ -5,6 +5,7 @@ import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
 import ErrorAlert from "../../components/ui/error-alert";
+import { getFeaturedEvents } from "../../dummy-data";
 
 function EventDetailPage(props) {
   const event = props.selectedEvent;
@@ -41,16 +42,17 @@ export async function getStaticProps(context) {
     props: {
       selectedEvent: event,
     },
+    revalidate: 30,
   };
 }
 
 export async function getStaticPaths() {
   const paths = await (
-    await getAllEvents()
+    await getFeaturedEvents()
   ).map((event) => ({ params: { eventId: event.id } }));
   return {
     paths: paths,
-    fallback: false,
+    fallback: true,
   };
 }
 export default EventDetailPage;
